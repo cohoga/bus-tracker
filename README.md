@@ -2,8 +2,6 @@
 
 A modern, responsive Flask web application that provides real-time bus arrival predictions for MBTA Route 39 at Bynner Street. Features dual-direction tracking with visual emphasis on inbound buses, intelligent leave-time calculations, and a clean, mobile-friendly interface.
 
-![Bus Tracker Screenshot](https://via.placeholder.com/800x400/003da5/ffffff?text=MBTA+Route+39+Bus+Tracker)
-
 ## 🌐 Live Demo
 
 🚀 **View the live application running on Railway:** [https://bus-tracker-production-d668.up.railway.app/](https://bus-tracker-production-d668.up.railway.app/)
