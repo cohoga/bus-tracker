@@ -4,6 +4,10 @@ A modern, responsive Flask web application that provides real-time bus arrival p
 
 ![Bus Tracker Screenshot](https://via.placeholder.com/800x400/003da5/ffffff?text=MBTA+Route+39+Bus+Tracker)
 
+## 🌐 Live Demo
+
+🚀 **View the live application running on Railway:** [https://bus-tracker-production-d668.up.railway.app/](https://bus-tracker-production-d668.up.railway.app/)
+
 ## ✨ Features
 
 ### 🚀 **Core Functionality**
