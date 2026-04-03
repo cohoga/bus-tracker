@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  mbta-bus-tracker:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - MBTA_API_KEY=${MBTA_API_KEY:-}
+    restart: unless-stopped
+    volumes:
+      - ./.env:/app/.env:ro
+    # Run as daemon - container will restart automatically
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MBTA Route 39 - Bynner Street</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚌 Route 39 Bus</h1>
+            <h2>{{ stop_name }}</h2>
+        </div>
+        
+        <div class="directions-container">
+            <!-- Inbound Section -->
+            <div class="direction-section inbound-primary">
+                <h3>Inbound</h3>
+                
+                <!-- Inbound Status Bar -->
+                <div class="status-bar">
+                    <div class="status-header">
+                        <span class="bus-count">{{ inbound_count_30min }} buses in next 30 min</span>
+                    </div>
+                    <div class="timeline-container">
+                        <div class="timeline-labels">
+                            <span>30 min</span>
+                            <span>20 min</span>
+                            <span>10 min</span>
+                            <span>Now</span>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-track"></div>
+                            {% for pred in inbound_predictions %}
+                            {% if pred.minutes_away <= 30 %}
+                            <div class="bus-dot inbound" 
+                                 style="right: {{ (pred.minutes_away / 30.0 * 100) }}%; 
+                                        background: {{ 'radial-gradient(circle, #28a745, #20c997)' if pred.minutes_away <= 3.75 else 
+                                                     'radial-gradient(circle, #20c997, #28a745)' if pred.minutes_away <= 7.5 else 
+                                                     'radial-gradient(circle, #ffc107, #20c997)' if pred.minutes_away <= 15 else 
+                                                     'radial-gradient(circle, #fd7e14, #ffc107)' if pred.minutes_away <= 22.5 else 
+                                                     'radial-gradient(circle, #dc3545, #fd7e14)' }};"
+                                 title="Inbound: {{ pred.formatted_time }} ({{ pred.minutes_away }} min)">
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if inbound_predictions %}
+                    {% for pred in inbound_predictions %}
+                    <div class="prediction-card inbound-primary {% if not pred.can_catch_bus %}too-late{% endif %} {% if pred.time_to_leave_minutes <= 0 %}leave-now{% endif %} {% if pred.time_to_leave_minutes <= 3 and pred.time_to_leave_minutes > 0 %}leave-soon{% endif %}">
+                        <div class="leave-action">
+                            {% if not pred.can_catch_bus %}
+                                <div class="action-text too-late">Too Late</div>
+                            {% elif pred.time_to_leave_minutes <= 0 %}
+                                <div class="action-text leave-now">Leave Now!</div>
+                            {% elif pred.time_to_leave_minutes == 1 %}
+                                <div class="action-text soon">1 min</div>
+                            {% elif pred.time_to_leave_minutes <= 3 %}
+                                <div class="action-text leave-soon">Leave Soon</div>
+                            {% else %}
+                                <div class="action-text">{{ pred.time_to_leave_minutes }} mins</div>
+                            {% endif %}
+                        </div>
+                        <div class="bus-details">
+                            <div class="arrival-time">{{ pred.formatted_time }}</div>
+                            <div class="arrival-minutes">
+                                {% if pred.minutes_away <= 0 %}
+                                    Arriving now
+                                {% elif pred.minutes_away == 1 %}
+                                    1 min away
+                                {% else %}
+                                    {{ pred.minutes_away }} mins away
+                                {% endif %}
+                            </div>
+                            {% if pred.vehicle_label %}
+                            <div class="vehicle">Bus #{{ pred.vehicle_label }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-predictions">
+                        No inbound buses scheduled
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Outbound Section -->
+            <div class="direction-section outbound-secondary">
+                <h3>Outbound</h3>
+                
+                <!-- Outbound Status Bar -->
+                <div class="status-bar">
+                    <div class="status-header">
+                        <span class="bus-count">{{ outbound_count_30min }} buses in next 30 min</span>
+                    </div>
+                    <div class="timeline-container">
+                        <div class="timeline-labels">
+                            <span>30 min</span>
+                            <span>20 min</span>
+                            <span>10 min</span>
+                            <span>Now</span>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-track"></div>
+                            {% for pred in outbound_predictions %}
+                            {% if pred.minutes_away <= 30 %}
+                            <div class="bus-dot outbound" 
+                                 style="right: {{ (pred.minutes_away / 30.0 * 100) }}%; 
+                                        background: {{ 'radial-gradient(circle, #28a745, #20c997)' if pred.minutes_away <= 3.75 else 
+                                                     'radial-gradient(circle, #20c997, #28a745)' if pred.minutes_away <= 7.5 else 
+                                                     'radial-gradient(circle, #ffc107, #20c997)' if pred.minutes_away <= 15 else 
+                                                     'radial-gradient(circle, #fd7e14, #ffc107)' if pred.minutes_away <= 22.5 else 
+                                                     'radial-gradient(circle, #dc3545, #fd7e14)' }};"
+                                 title="Outbound: {{ pred.formatted_time }} ({{ pred.minutes_away }} min)">
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if outbound_predictions %}
+                    {% for pred in outbound_predictions %}
+                    <div class="prediction-card outbound-secondary {% if not pred.can_catch_bus %}too-late{% endif %} {% if pred.time_to_leave_minutes <= 0 %}leave-now{% endif %} {% if pred.time_to_leave_minutes <= 3 and pred.time_to_leave_minutes > 0 %}leave-soon{% endif %}">
+                        <div class="leave-action">
+                            {% if not pred.can_catch_bus %}
+                                <div class="action-text too-late">Too Late</div>
+                            {% elif pred.time_to_leave_minutes <= 0 %}
+                                <div class="action-text leave-now">Leave Now!</div>
+                            {% elif pred.time_to_leave_minutes == 1 %}
+                                <div class="action-text soon">1 min</div>
+                            {% elif pred.time_to_leave_minutes <= 3 %}
+                                <div class="action-text leave-soon">Leave Soon</div>
+                            {% else %}
+                                <div class="action-text">{{ pred.time_to_leave_minutes }} mins</div>
+                            {% endif %}
+                        </div>
+                        <div class="bus-details">
+                            <div class="arrival-time">{{ pred.formatted_time }}</div>
+                            <div class="arrival-minutes">
+                                {% if pred.minutes_away <= 0 %}
+                                    Arriving now
+                                {% elif pred.minutes_away == 1 %}
+                                    1 min away
+                                {% else %}
+                                    {{ pred.minutes_away }} mins away
+                                {% endif %}
+                            </div>
+                            {% if pred.vehicle_label %}
+                            <div class="vehicle">Bus #{{ pred.vehicle_label }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-predictions">
+                        No outbound buses scheduled
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <a href="/" class="refresh-btn">Refresh</a>
+        
+        <div class="last-updated">
+            Last updated: {{ current_time }}
+            <br>Auto-refresh in 30 seconds
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
