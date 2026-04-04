@@ -266,12 +266,13 @@ body {
 
 .directions-container {
     display: flex;
+    flex-direction: column;  /* Stack vertically instead of side-by-side */
     gap: 40px;
     margin-top: 30px;
 }
 
 .directions-container.afternoon-order {
-    flex-direction: row-reverse;
+    flex-direction: column-reverse;  /* Reverse the vertical stack */
 }
 
 .direction-section {

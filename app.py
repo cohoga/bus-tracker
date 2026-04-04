@@ -2,6 +2,7 @@ import os
 import requests
 from flask import Flask, jsonify, render_template
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -27,6 +28,9 @@ ROUTE_39_ID = "39"
 # Bynner Street stop ID - using a known working stop ID for Route 39
 # This is the inbound stop at Bynner St
 BYNNER_STREET_STOP_ID = "1835"  # Fallback stop ID
+
+# Use US Eastern time for display and morning/evening switching
+EASTERN = ZoneInfo("America/New_York")
 
 def get_mbta_headers():
     """Get headers for MBTA API requests"""
@@ -205,9 +209,10 @@ def index():
         inbound_count_30min = sum(1 for pred in inbound_predictions if pred['minutes_away'] <= 30)
         outbound_count_30min = sum(1 for pred in outbound_predictions if pred['minutes_away'] <= 30)
         
-        # Determine time of day: morning (before noon) or afternoon
-        current_hour = datetime.now().hour
+        # Determine time of day: morning (before noon) or afternoon in Eastern time
+        current_hour = datetime.now(EASTERN).hour
         is_morning = current_hour < 12
+        current_time = datetime.now(EASTERN).strftime('%I:%M:%S %p')
         
         # Use inbound stop name as primary
         inbound_stop_name = stops['inbound']['name'] or "Bynner Street (Route 39)"
@@ -222,7 +227,7 @@ def index():
             inbound_stop_name=inbound_stop_name,
             outbound_stop_name=outbound_stop_name,
             is_morning=is_morning,
-            current_time=datetime.now().strftime('%I:%M:%S %p')
+            current_time=current_time
         )
     except Exception as e:
         # Return error page if something goes wrong

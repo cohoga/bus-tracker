@@ -12,10 +12,10 @@
             <h1>🚌 39 Bus</h1>
         </div>
         
-        <div class=\"directions-container{% if not is_morning %} afternoon-order{% endif %}\">
+        <div class="directions-container{% if not is_morning %} afternoon-order{% endif %}">
             <!-- Inbound Section -->
-            <div class=\"direction-section {% if is_morning %}inbound-primary{% else %}inbound-secondary{% endif %}\">
-                <h3>☀️ Work</h3>
+            <div class="direction-section {% if is_morning %}inbound-primary{% else %}inbound-secondary{% endif %}">
+                <h3>Work</h3>
                 <div class="stop-location">{{ inbound_stop_name }}</div>                
                 <!-- Inbound Status Bar -->
                 <div class="status-bar">
@@ -89,8 +89,8 @@
             </div>
             
             <!-- Outbound Section -->
-            <div class=\"direction-section {% if is_morning %}outbound-secondary{% else %}outbound-primary{% endif %}\">
-                <h3>🌅 Home</h3>
+            <div class="direction-section {% if is_morning %}outbound-secondary{% else %}outbound-primary{% endif %}">
+                <h3>Home</h3>
                 <div class="stop-location">{{ outbound_stop_name }}</div>
                 
                 <!-- Outbound Status Bar -->
