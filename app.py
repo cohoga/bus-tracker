@@ -16,6 +16,12 @@ MBTA_API_KEY = os.getenv('MBTA_API_KEY')  # Optional - you can use without key f
 # How many upcoming predictions to show (configurable via env)
 MAX_PREDICTIONS = int(os.getenv('MAX_PREDICTIONS', '6'))
 
+# Walk times and wait times for inbound/outbound (configurable via env)
+INBOUND_WALK_TIME = int(os.getenv('INBOUND_WALK_TIME', '3'))
+OUTBOUND_WALK_TIME = int(os.getenv('OUTBOUND_WALK_TIME', '3'))
+INBOUND_MAX_WAIT = int(os.getenv('INBOUND_MAX_WAIT', '5'))
+OUTBOUND_MAX_WAIT = int(os.getenv('OUTBOUND_MAX_WAIT', '5'))
+
 # Route 39 ID and Bynner Street stop ID
 ROUTE_39_ID = "39"
 # Bynner Street stop ID - using a known working stop ID for Route 39
@@ -85,7 +91,7 @@ def find_stop_ids_by_name():
     
     return stops
 
-def get_next_bus_predictions(stop_id, direction_id):
+def get_next_bus_predictions(stop_id, direction_id, walk_time=3, max_wait=5):
     """Get real-time predictions for the next 39 bus at the specified stop"""
     try:
         url = f"{MBTA_API_BASE}/predictions"
@@ -124,17 +130,13 @@ def get_next_bus_predictions(stop_id, direction_id):
                 now = datetime.now(pred_datetime.tzinfo)
                 minutes_away = int((pred_datetime - now).total_seconds() / 60)
                 
-                # Calculate optimal leave time
-                # User preferences: 3 min walk, max 5 min wait at stop
-                WALK_TIME_MINUTES = 3
-                MAX_WAIT_MINUTES = 5
-                
-                # To arrive 2.5 min early (middle of acceptable 0-5 min wait window)
-                optimal_arrival_buffer = 2.5
-                time_to_leave_minutes = int(max(0, minutes_away - WALK_TIME_MINUTES - optimal_arrival_buffer))
+                # Calculate optimal leave time using provided walk_time and max_wait
+                # To arrive 2.5 min early (middle of acceptable 0-max_wait min wait window)
+                optimal_arrival_buffer = max_wait / 2.0
+                time_to_leave_minutes = int(max(0, minutes_away - walk_time - optimal_arrival_buffer))
                 
                 # Determine if bus is catchable
-                can_catch_bus = minutes_away > WALK_TIME_MINUTES
+                can_catch_bus = minutes_away > walk_time
                 
                 # Get additional info from relationships
                 trip_info = None
@@ -189,15 +191,15 @@ def index():
         # Find stop IDs for both directions
         stops = find_stop_ids_by_name()
         
-        # Get predictions for both directions
+        # Get predictions for both directions with their specific walk times and wait times
         inbound_predictions = []
         outbound_predictions = []
         
         if stops['inbound']['id']:
-            inbound_predictions = get_next_bus_predictions(stops['inbound']['id'], '1')
+            inbound_predictions = get_next_bus_predictions(stops['inbound']['id'], '1', INBOUND_WALK_TIME, INBOUND_MAX_WAIT)
         
         if stops['outbound']['id']:
-            outbound_predictions = get_next_bus_predictions(stops['outbound']['id'], '0')
+            outbound_predictions = get_next_bus_predictions(stops['outbound']['id'], '0', OUTBOUND_WALK_TIME, OUTBOUND_MAX_WAIT)
         
         # Calculate buses arriving within 30 minutes
         inbound_count_30min = sum(1 for pred in inbound_predictions if pred['minutes_away'] <= 30)

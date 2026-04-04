@@ -11,7 +11,7 @@ A modern, responsive Flask web application that provides real-time bus arrival p
 ### 🚀 **Core Functionality**
 - **Real-time Predictions**: Live bus arrival times using MBTA V3 API
 - **Dual Direction Support**: Separate tracking for inbound and outbound buses
-- **Smart Leave Times**: Optimized departure calculations based on 3-minute walk time and 5-minute max wait
+- **Smart Leave Times**: Optimized departure calculations based on configurable walk times and max wait times for each direction
 - **30-Minute Timeline**: Visual status bars showing bus arrivals over the next 30 minutes
 - **Bus Count Display**: Clear indication of how many buses are arriving in the next 30 minutes
 
@@ -126,6 +126,10 @@ Returns raw API data for troubleshooting (development only).
 |----------|-------------|---------|----------|
 | `MBTA_API_KEY` | MBTA V3 API key for higher rate limits | None | No |
 | `MAX_PREDICTIONS` | Number of predictions to show per direction | 6 | No |
+| `INBOUND_WALK_TIME` | Walk time in minutes for inbound (Work) route | 3 | No |
+| `OUTBOUND_WALK_TIME` | Walk time in minutes for outbound (Home) route | 3 | No |
+| `INBOUND_MAX_WAIT` | Maximum wait time in minutes for inbound route | 5 | No |
+| `OUTBOUND_MAX_WAIT` | Maximum wait time in minutes for outbound route | 5 | No |
 
 ### Stop ID Configuration
 
@@ -177,13 +181,13 @@ bus_tracker/
 
 #### Smart Leave Time Algorithm
 ```python
-# User preferences
-WALK_TIME_MINUTES = 3      # 3-minute walk to stop
-MAX_WAIT_MINUTES = 5       # Maximum 5 minutes waiting
-optimal_arrival_buffer = 2.5  # Arrive 2.5 min early
+# Configurable preferences per direction
+walk_time = INBOUND_WALK_TIME  # e.g., 3 minutes for inbound
+max_wait = INBOUND_MAX_WAIT    # e.g., 5 minutes for inbound
+optimal_arrival_buffer = max_wait / 2.0  # Arrive midway in acceptable wait window
 
 # Calculate optimal leave time
-time_to_leave_minutes = max(0, minutes_away - WALK_TIME_MINUTES - optimal_arrival_buffer)
+time_to_leave_minutes = max(0, minutes_away - walk_time - optimal_arrival_buffer)
 ```
 
 #### Visual Timeline System

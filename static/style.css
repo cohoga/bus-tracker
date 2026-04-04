@@ -3,7 +3,7 @@ body {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #7c878e 50%, #003da5 100%);
     min-height: 100vh;
     line-height: 1.6;
 }
@@ -84,7 +84,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #28a745 0%, #20c997 12.5%, #ffc107 25%, #fd7e14 50%, #dc3545 100%);
+    background: linear-gradient(90deg, #003da5 0%, #00843d 25%, #ed8b00 50%, #da001e 100%);
     border-radius: 2px;
     transform: translateY(-50%);
 }
@@ -130,7 +130,7 @@ body {
 .prediction-card.outbound-secondary {
     padding: 20px;
     margin: 16px 0;
-    border-left: 5px solid #6c757d;
+    border-left: 5px solid #7c878e;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     opacity: 0.9;
 }
@@ -335,20 +335,20 @@ body {
 }
 
 .direction-section.outbound-secondary h3 {
-    color: #6c757d;
+    color: #7c878e;
     font-size: 1.6rem;
     font-weight: 600;
     margin-bottom: 4px;
     padding-bottom: 8px;
-    border-bottom: 3px solid #6c757d;
+    border-bottom: 3px solid #7c878e;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 .direction-section.outbound-secondary .status-bar {
-    background: rgba(108, 117, 125, 0.05);
-    border: 2px solid #6c757d;
+    background: rgba(124, 135, 142, 0.05);
+    border: 2px solid #7c878e;
     border-radius: 10px;
     padding: 14px 18px;
     box-shadow: 0 3px 12px rgba(0,0,0,0.1);
@@ -357,9 +357,9 @@ body {
 .direction-section.outbound-secondary .bus-count {
     font-size: 15px;
     font-weight: 600;
-    color: #6c757d;
+    color: #7c878e;
     background: #f8f9fa;
-    border: 2px solid #6c757d;
+    border: 2px solid #7c878e;
 }
 
 .direction-section.outbound-secondary .timeline {
@@ -432,20 +432,20 @@ body {
 }
 
 .direction-section.inbound-secondary h3 {
-    color: #6c757d;
+    color: #7c878e;
     font-size: 1.6rem;
     font-weight: 600;
     margin-bottom: 4px;
     padding-bottom: 8px;
-    border-bottom: 3px solid #6c757d;
+    border-bottom: 3px solid #7c878e;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 .direction-section.inbound-secondary .status-bar {
-    background: rgba(108, 117, 125, 0.05);
-    border: 2px solid #6c757d;
+    background: rgba(124, 135, 142, 0.05);
+    border: 2px solid #7c878e;
     border-radius: 10px;
     padding: 14px 18px;
     box-shadow: 0 3px 12px rgba(0,0,0,0.1);
@@ -454,9 +454,9 @@ body {
 .direction-section.inbound-secondary .bus-count {
     font-size: 15px;
     font-weight: 600;
-    color: #6c757d;
+    color: #7c878e;
     background: #f8f9fa;
-    border: 2px solid #6c757d;
+    border: 2px solid #7c878e;
 }
 
 .direction-section.inbound-secondary .timeline {
@@ -472,7 +472,7 @@ body {
 .prediction-card.inbound-secondary {
     padding: 20px;
     margin: 16px 0;
-    border-left: 5px solid #6c757d;
+    border-left: 5px solid #7c878e;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     opacity: 0.9;
 }
@@ -516,20 +516,20 @@ body {
 
 .no-predictions {
     text-align: center;
-    color: #888;
+    color: #7c878e;
     font-style: italic;
     padding: 40px 20px;
     background: #f8f9fa;
     border-radius: 12px;
     margin: 20px 0;
-    border: 2px dashed #dee2e6;
+    border: 2px dashed #7c878e;
 }
 
 .last-updated {
     text-align: center;
-    color: #888;
+    color: #7c878e;
     font-size: 14px;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid #7c878e;
 }

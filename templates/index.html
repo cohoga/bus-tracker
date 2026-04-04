@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚌 Route 39 Bus</h1>
+            <h1>🚌 39 Bus</h1>
         </div>
         
         <div class=\"directions-container{% if not is_morning %} afternoon-order{% endif %}\">
@@ -35,11 +35,11 @@
                             {% if pred.minutes_away <= 30 %}
                             <div class="bus-dot inbound" 
                                  style="right: {{ (pred.minutes_away / 30.0 * 100) }}%; 
-                                        background: {{ 'radial-gradient(circle, #28a745, #20c997)' if pred.minutes_away <= 3.75 else 
-                                                     'radial-gradient(circle, #20c997, #28a745)' if pred.minutes_away <= 7.5 else 
-                                                     'radial-gradient(circle, #ffc107, #20c997)' if pred.minutes_away <= 15 else 
-                                                     'radial-gradient(circle, #fd7e14, #ffc107)' if pred.minutes_away <= 22.5 else 
-                                                     'radial-gradient(circle, #dc3545, #fd7e14)' }};"
+                                        background: {{ 'radial-gradient(circle, #003da5, #0056b3)' if pred.minutes_away <= 3.75 else 
+                                                     'radial-gradient(circle, #0056b3, #003da5)' if pred.minutes_away <= 7.5 else 
+                                                     'radial-gradient(circle, #ed8b00, #0056b3)' if pred.minutes_away <= 15 else 
+                                                     'radial-gradient(circle, #da001e, #ed8b00)' if pred.minutes_away <= 22.5 else 
+                                                     'radial-gradient(circle, #dc3545, #da001e)' }};"
                                  title="to work: {{ pred.formatted_time }} ({{ pred.minutes_away }} min)">
                             </div>
                             {% endif %}
@@ -111,11 +111,11 @@
                             {% if pred.minutes_away <= 30 %}
                             <div class="bus-dot outbound" 
                                  style="right: {{ (pred.minutes_away / 30.0 * 100) }}%; 
-                                        background: {{ 'radial-gradient(circle, #28a745, #20c997)' if pred.minutes_away <= 3.75 else 
-                                                     'radial-gradient(circle, #20c997, #28a745)' if pred.minutes_away <= 7.5 else 
-                                                     'radial-gradient(circle, #ffc107, #20c997)' if pred.minutes_away <= 15 else 
-                                                     'radial-gradient(circle, #fd7e14, #ffc107)' if pred.minutes_away <= 22.5 else 
-                                                     'radial-gradient(circle, #dc3545, #fd7e14)' }};"
+                                        background: {{ 'radial-gradient(circle, #003da5, #0056b3)' if pred.minutes_away <= 3.75 else 
+                                                     'radial-gradient(circle, #0056b3, #003da5)' if pred.minutes_away <= 7.5 else 
+                                                     'radial-gradient(circle, #ed8b00, #0056b3)' if pred.minutes_away <= 15 else 
+                                                     'radial-gradient(circle, #da001e, #ed8b00)' if pred.minutes_away <= 22.5 else 
+                                                     'radial-gradient(circle, #dc3545, #da001e)' }};"
                                  title="home: {{ pred.formatted_time }} ({{ pred.minutes_away }} min)">
                             </div>
                             {% endif %}
