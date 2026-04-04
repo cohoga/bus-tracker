@@ -19,9 +19,9 @@ MAX_PREDICTIONS = int(os.getenv('MAX_PREDICTIONS', '6'))
 
 # Walk times and wait times for inbound/outbound (configurable via env)
 INBOUND_WALK_TIME = int(os.getenv('INBOUND_WALK_TIME', '3'))
-OUTBOUND_WALK_TIME = int(os.getenv('OUTBOUND_WALK_TIME', '3'))
-INBOUND_MAX_WAIT = int(os.getenv('INBOUND_MAX_WAIT', '5'))
-OUTBOUND_MAX_WAIT = int(os.getenv('OUTBOUND_MAX_WAIT', '5'))
+OUTBOUND_WALK_TIME = int(os.getenv('OUTBOUND_WALK_TIME', '8'))
+INBOUND_MAX_WAIT = int(os.getenv('INBOUND_MAX_WAIT', '4'))
+OUTBOUND_MAX_WAIT = int(os.getenv('OUTBOUND_MAX_WAIT', '4'))
 
 # Route 39 ID and Bynner Street stop ID
 ROUTE_39_ID = "39"
@@ -82,7 +82,7 @@ def find_stop_ids_by_name():
         
         data = response.json()
         
-        # Look for Huntington Ave in the outbound stops
+        # Look for 677 Huntington Ave in the outbound stops
         for stop in data.get('data', []):
             stop_name_api = stop['attributes']['name']
             if '677' in stop_name_api:
