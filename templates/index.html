@@ -10,14 +10,13 @@
     <div class="container">
         <div class="header">
             <h1>🚌 Route 39 Bus</h1>
-            <h2>{{ stop_name }}</h2>
         </div>
         
-        <div class="directions-container">
+        <div class=\"directions-container{% if not is_morning %} afternoon-order{% endif %}\">
             <!-- Inbound Section -->
-            <div class="direction-section inbound-primary">
-                <h3>Inbound</h3>
-                
+            <div class=\"direction-section {% if is_morning %}inbound-primary{% else %}inbound-secondary{% endif %}\">
+                <h3>☀️ Work</h3>
+                <div class="stop-location">{{ inbound_stop_name }}</div>                
                 <!-- Inbound Status Bar -->
                 <div class="status-bar">
                     <div class="status-header">
@@ -41,7 +40,7 @@
                                                      'radial-gradient(circle, #ffc107, #20c997)' if pred.minutes_away <= 15 else 
                                                      'radial-gradient(circle, #fd7e14, #ffc107)' if pred.minutes_away <= 22.5 else 
                                                      'radial-gradient(circle, #dc3545, #fd7e14)' }};"
-                                 title="Inbound: {{ pred.formatted_time }} ({{ pred.minutes_away }} min)">
+                                 title="to work: {{ pred.formatted_time }} ({{ pred.minutes_away }} min)">
                             </div>
                             {% endif %}
                             {% endfor %}
@@ -51,7 +50,7 @@
                 
                 {% if inbound_predictions %}
                     {% for pred in inbound_predictions %}
-                    <div class="prediction-card inbound-primary {% if not pred.can_catch_bus %}too-late{% endif %} {% if pred.time_to_leave_minutes <= 0 %}leave-now{% endif %} {% if pred.time_to_leave_minutes <= 3 and pred.time_to_leave_minutes > 0 %}leave-soon{% endif %}">
+                    <div class="prediction-card {% if is_morning %}inbound-primary{% else %}inbound-secondary{% endif %} {% if not pred.can_catch_bus %}too-late{% endif %} {% if pred.time_to_leave_minutes <= 0 %}leave-now{% endif %} {% if pred.time_to_leave_minutes <= 3 and pred.time_to_leave_minutes > 0 %}leave-soon{% endif %}">
                         <div class="leave-action">
                             {% if not pred.can_catch_bus %}
                                 <div class="action-text too-late">Too Late</div>
@@ -90,8 +89,9 @@
             </div>
             
             <!-- Outbound Section -->
-            <div class="direction-section outbound-secondary">
-                <h3>Outbound</h3>
+            <div class=\"direction-section {% if is_morning %}outbound-secondary{% else %}outbound-primary{% endif %}\">
+                <h3>🌅 Home</h3>
+                <div class="stop-location">{{ outbound_stop_name }}</div>
                 
                 <!-- Outbound Status Bar -->
                 <div class="status-bar">
@@ -116,7 +116,7 @@
                                                      'radial-gradient(circle, #ffc107, #20c997)' if pred.minutes_away <= 15 else 
                                                      'radial-gradient(circle, #fd7e14, #ffc107)' if pred.minutes_away <= 22.5 else 
                                                      'radial-gradient(circle, #dc3545, #fd7e14)' }};"
-                                 title="Outbound: {{ pred.formatted_time }} ({{ pred.minutes_away }} min)">
+                                 title="home: {{ pred.formatted_time }} ({{ pred.minutes_away }} min)">
                             </div>
                             {% endif %}
                             {% endfor %}
@@ -126,7 +126,7 @@
                 
                 {% if outbound_predictions %}
                     {% for pred in outbound_predictions %}
-                    <div class="prediction-card outbound-secondary {% if not pred.can_catch_bus %}too-late{% endif %} {% if pred.time_to_leave_minutes <= 0 %}leave-now{% endif %} {% if pred.time_to_leave_minutes <= 3 and pred.time_to_leave_minutes > 0 %}leave-soon{% endif %}">
+                    <div class="prediction-card {% if is_morning %}outbound-secondary{% else %}outbound-primary{% endif %} {% if not pred.can_catch_bus %}too-late{% endif %} {% if pred.time_to_leave_minutes <= 0 %}leave-now{% endif %} {% if pred.time_to_leave_minutes <= 3 and pred.time_to_leave_minutes > 0 %}leave-soon{% endif %}">
                         <div class="leave-action">
                             {% if not pred.can_catch_bus %}
                                 <div class="action-text too-late">Too Late</div>

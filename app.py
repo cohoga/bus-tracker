@@ -31,34 +31,57 @@ def get_mbta_headers():
         headers['X-API-Key'] = MBTA_API_KEY
     return headers
 
-def find_stop_ids_by_name(stop_name="Bynner"):
-    """Find the stop IDs for Bynner Street on route 39 for both directions"""
+def find_stop_ids_by_name():
+    """Find the stop IDs for Bynner Street (inbound) and 677 Huntington Ave (outbound) on route 39"""
     stops = {'inbound': {'id': None, 'name': None}, 'outbound': {'id': None, 'name': None}}
     
-    for direction_id in ['0', '1']:  # 0=outbound, 1=inbound
-        try:
-            url = f"{MBTA_API_BASE}/stops"
-            params = {
-                'filter[route]': ROUTE_39_ID,
-                'filter[direction_id]': direction_id,
-            }
-            
-            response = requests.get(url, params=params, headers=get_mbta_headers())
-            response.raise_for_status()
-            
-            data = response.json()
-            
-            # Look for Bynner Street in the stops
-            for stop in data.get('data', []):
-                stop_name_api = stop['attributes']['name']
-                if 'Bynner' in stop_name_api:
-                    direction_key = 'outbound' if direction_id == '0' else 'inbound'
-                    stops[direction_key]['id'] = stop['id']
-                    stops[direction_key]['name'] = stop_name_api
-                    break
+    # Inbound: Bynner Street (direction_id=1)
+    try:
+        url = f"{MBTA_API_BASE}/stops"
+        params = {
+            'filter[route]': ROUTE_39_ID,
+            'filter[direction_id]': '1',  # Inbound
+        }
         
-        except requests.RequestException as e:
-            print(f"Error finding {direction_key} stop: {e}")
+        response = requests.get(url, params=params, headers=get_mbta_headers())
+        response.raise_for_status()
+        
+        data = response.json()
+        
+        # Look for Bynner Street in the inbound stops
+        for stop in data.get('data', []):
+            stop_name_api = stop['attributes']['name']
+            if 'Bynner' in stop_name_api:
+                stops['inbound']['id'] = stop['id']
+                stops['inbound']['name'] = stop_name_api
+                break
+    
+    except requests.RequestException as e:
+        print(f"Error finding inbound stop: {e}")
+    
+    # Outbound: 677 Huntington Ave (direction_id=0)
+    try:
+        url = f"{MBTA_API_BASE}/stops"
+        params = {
+            'filter[route]': ROUTE_39_ID,
+            'filter[direction_id]': '0',  # Outbound
+        }
+        
+        response = requests.get(url, params=params, headers=get_mbta_headers())
+        response.raise_for_status()
+        
+        data = response.json()
+        
+        # Look for Huntington Ave in the outbound stops
+        for stop in data.get('data', []):
+            stop_name_api = stop['attributes']['name']
+            if '677' in stop_name_api:
+                stops['outbound']['id'] = stop['id']
+                stops['outbound']['name'] = stop_name_api
+                break
+    
+    except requests.RequestException as e:
+        print(f"Error finding outbound stop: {e}")
     
     return stops
 
@@ -164,7 +187,7 @@ def index():
     """Main page showing next bus arrivals"""
     try:
         # Find stop IDs for both directions
-        stops = find_stop_ids_by_name("Bynner")
+        stops = find_stop_ids_by_name()
         
         # Get predictions for both directions
         inbound_predictions = []
@@ -180,10 +203,13 @@ def index():
         inbound_count_30min = sum(1 for pred in inbound_predictions if pred['minutes_away'] <= 30)
         outbound_count_30min = sum(1 for pred in outbound_predictions if pred['minutes_away'] <= 30)
         
-        # Use inbound stop name as primary, fallback to outbound or hardcoded
-        stop_name = (stops['inbound']['name'] or 
-                    stops['outbound']['name'] or 
-                    "Bynner Street (Route 39)")
+        # Determine time of day: morning (before noon) or afternoon
+        current_hour = datetime.now().hour
+        is_morning = current_hour < 12
+        
+        # Use inbound stop name as primary
+        inbound_stop_name = stops['inbound']['name'] or "Bynner Street (Route 39)"
+        outbound_stop_name = stops['outbound']['name'] or "677 Huntington Ave (Route 39)"
         
         return render_template(
             'index.html',
@@ -191,7 +217,9 @@ def index():
             outbound_predictions=outbound_predictions,
             inbound_count_30min=inbound_count_30min,
             outbound_count_30min=outbound_count_30min,
-            stop_name=stop_name,
+            inbound_stop_name=inbound_stop_name,
+            outbound_stop_name=outbound_stop_name,
+            is_morning=is_morning,
             current_time=datetime.now().strftime('%I:%M:%S %p')
         )
     except Exception as e:
@@ -210,7 +238,7 @@ def index():
 @app.route('/api/predictions')
 def api_predictions():
     """API endpoint returning JSON predictions"""
-    stops = find_stop_ids_by_name("Bynner")
+    stops = find_stop_ids_by_name()
     
     # Get predictions for both directions
     inbound_predictions = []
@@ -247,7 +275,7 @@ def api_predictions():
 def debug_predictions():
     """Debug endpoint to see raw prediction data"""
     try:
-        stops = find_stop_ids_by_name("Bynner")
+        stops = find_stop_ids_by_name()
         stop_id = stops['inbound']['id'] or BYNNER_STREET_STOP_ID
         stop_name = stops['inbound']['name'] or "Bynner Street (Route 39)"
         
@@ -306,7 +334,7 @@ if __name__ == '__main__':
     print(f"MBTA API Key configured: {'Yes' if MBTA_API_KEY else 'No (using rate-limited access)'}")
     
     # Try to find the correct stop IDs on startup
-    stops = find_stop_ids_by_name("Bynner")
+    stops = find_stop_ids_by_name()
     if stops['inbound']['id']:
         print(f"Found inbound stop: {stops['inbound']['name']} (ID: {stops['inbound']['id']})")
     else:
